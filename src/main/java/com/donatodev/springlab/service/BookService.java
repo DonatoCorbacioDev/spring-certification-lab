@@ -144,4 +144,17 @@ public class BookService {
                 .map(this::toResponse)
                 .toList();
     }
+
+    @Transactional
+    public BookResponse borrowCopy(Long id) {
+        BookEntity book = bookRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new BookNotFoundException(id)
+                );
+
+        book.borrowCopy();
+
+        return toResponse(book);
+    }
 }

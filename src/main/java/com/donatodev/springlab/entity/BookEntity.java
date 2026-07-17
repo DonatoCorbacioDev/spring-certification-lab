@@ -76,6 +76,23 @@ public class BookEntity {
         this.publisher = publisher;
     }
 
+    /**
+     * Registra il prestito di una copia.
+     *
+     * La Entity protegge la regola:
+     * non si può prestare un libro
+     * quando non ci sono copie disponibili.
+     */
+    public void borrowCopy() {
+        if (copies == null || copies <= 0) {
+            throw new IllegalStateException(
+                    "Nessuna copia disponibile per il libro: " + title
+            );
+        }
+
+        copies--;
+    }
+
     public Long getId() {
         return id;
     }

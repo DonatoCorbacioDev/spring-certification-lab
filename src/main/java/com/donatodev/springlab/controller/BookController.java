@@ -121,4 +121,11 @@ public class BookController {
                 sort
         );
     }
+
+    @PatchMapping("/{id}/borrow")
+    public BookResponse borrowCopy(
+            @PathVariable Long id
+    ) {
+        return bookService.borrowCopy(id);
+    }
 }
