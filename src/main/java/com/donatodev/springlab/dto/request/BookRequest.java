@@ -32,6 +32,10 @@ public record BookRequest(
         BookCategory category,
 
         @NotNull(message = "La data di pubblicazione è obbligatoria")
-        LocalDate publishedDate
+        LocalDate publishedDate,
+
+        @NotNull(message = "L'editore è obbligatorio")
+        @Positive(message = "L'identificativo dell'editore deve essere positivo")
+        Long publisherId
 ) {
 }

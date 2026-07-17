@@ -2,7 +2,9 @@ package com.donatodev.springlab.runner;
 
 import com.donatodev.springlab.entity.BookCategory;
 import com.donatodev.springlab.entity.BookEntity;
+import com.donatodev.springlab.entity.PublisherEntity;
 import com.donatodev.springlab.repository.BookRepository;
+import com.donatodev.springlab.repository.PublisherRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -18,11 +20,14 @@ import java.util.List;
 public class BookDataLoader implements CommandLineRunner {
 
     private final BookRepository bookRepository;
+    private final PublisherRepository publisherRepository;
 
     public BookDataLoader(
-            BookRepository bookRepository
+            BookRepository bookRepository,
+            PublisherRepository publisherRepository
     ) {
         this.bookRepository = bookRepository;
+        this.publisherRepository = publisherRepository;
     }
 
     @Override
@@ -31,13 +36,24 @@ public class BookDataLoader implements CommandLineRunner {
             return;
         }
 
+        PublisherEntity firstPublisher =
+                publisherRepository.save(
+                        new PublisherEntity("Prentice Hall")
+                );
+
+        PublisherEntity secondPublisher =
+                publisherRepository.save(
+                        new PublisherEntity("Addison-Wesley")
+                );
+
         BookEntity firstBook = new BookEntity(
                 "Clean Code",
                 "Robert C. Martin",
                 2,
                 new BigDecimal("45.90"),
                 BookCategory.TECHNOLOGY,
-                LocalDate.of(2008, 8, 1)
+                LocalDate.of(2008, 8, 1),
+                firstPublisher
         );
 
         BookEntity secondBook = new BookEntity(
@@ -46,19 +62,12 @@ public class BookDataLoader implements CommandLineRunner {
                 1,
                 new BigDecimal("52.50"),
                 BookCategory.TECHNOLOGY,
-                LocalDate.of(2018, 1, 6)
+                LocalDate.of(2018, 1, 6),
+                secondPublisher
         );
 
-        List<BookEntity> savedBooks =
-                bookRepository.saveAll(
-                        List.of(firstBook, secondBook)
-                );
-
-        System.out.println(
-                "Book IDs persisted via JpaRepository: "
-                        + savedBooks.stream()
-                        .map(BookEntity::getId)
-                        .toList()
+        bookRepository.saveAll(
+                List.of(firstBook, secondBook)
         );
     }
 }

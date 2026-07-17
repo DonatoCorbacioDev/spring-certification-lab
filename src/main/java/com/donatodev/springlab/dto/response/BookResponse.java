@@ -19,6 +19,8 @@ public record BookResponse(
         BookCategory category,
         LocalDate publishedDate,
         LocalDateTime createdAt,
-        boolean available
+        boolean available,
+        Long publisherId,
+        String publisherName
 ) {
 }

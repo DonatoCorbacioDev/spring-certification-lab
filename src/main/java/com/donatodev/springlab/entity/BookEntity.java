@@ -1,13 +1,6 @@
 package com.donatodev.springlab.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -48,6 +41,10 @@ public class BookEntity {
     @Column(name = "published_date", nullable = false)
     private LocalDate publishedDate;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "publisher_id", nullable = false)
+    private PublisherEntity publisher;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -66,7 +63,8 @@ public class BookEntity {
             Integer copies,
             BigDecimal replacementCost,
             BookCategory category,
-            LocalDate publishedDate
+            LocalDate publishedDate,
+            PublisherEntity publisher
     ) {
         this.title = title;
         this.author = author;
@@ -75,6 +73,7 @@ public class BookEntity {
         this.category = category;
         this.publishedDate = publishedDate;
         this.createdAt = LocalDateTime.now();
+        this.publisher = publisher;
     }
 
     public Long getId() {
@@ -103,6 +102,10 @@ public class BookEntity {
 
     public LocalDate getPublishedDate() {
         return publishedDate;
+    }
+
+    public PublisherEntity getPublisher() {
+        return publisher;
     }
 
     public LocalDateTime getCreatedAt() {
