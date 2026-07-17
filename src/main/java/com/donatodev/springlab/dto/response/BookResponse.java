@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * Dati del libro restituiti
- * dalle API REST.
+ * DTO di risposta che espone i dati di un libro senza rendere pubblica
+ * l'entity JPA e la sua relazione con l'editore.
  */
 public record BookResponse(
         Long id,

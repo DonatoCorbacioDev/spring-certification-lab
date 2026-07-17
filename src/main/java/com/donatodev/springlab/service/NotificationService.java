@@ -1,10 +1,8 @@
 package com.donatodev.springlab.service;
 
 /**
- * Definisce il contratto comune per i servizi di notifica.
- *
- * Un'interfaccia stabilisce quali operazioni devono offrire
- * le implementazioni concrete, senza decidere come vengono eseguite-
+ * Definisce il contratto comune delle diverse strategie di notifica,
+ * senza vincolare i client a una specifica implementazione.
  */
 public interface NotificationService {
 

@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Gestisce le richieste HTTP relative ai libri
- * e delega la logica al BookService.
+ * Gestisce le richieste HTTP relative ai libri.
+ *
+ * Il controller si occupa del contratto REST e delega
+ * la logica applicativa a {@link BookService}.
  */
 @RestController
 @RequestMapping("/api/books")

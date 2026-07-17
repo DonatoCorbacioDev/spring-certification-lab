@@ -18,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Contiene la logica applicativa
- * relativa al catalogo dei libri.
+ * Contiene la logica applicativa relativa al catalogo dei libri.
+ *
+ * Coordina i repository, delimita le transazioni e converte
+ * le entity persistenti nei DTO esposti dall'API.
  */
 @Service
 public class BookService {
@@ -82,8 +84,9 @@ public class BookService {
     }
 
     /**
-     * Converte il modello persistente
-     * nel DTO pubblico dell'API.
+     * Converte un'entity persistente nel DTO pubblico dell'API.
+     * Il mapping avviene all'interno della transazione, così la relazione
+     * {@code publisher}, configurata con fetch LAZY, può essere inizializzata.
      */
     private BookResponse toResponse(
             BookEntity entity
@@ -154,6 +157,11 @@ public class BookService {
                 );
 
         book.borrowCopy();
+
+        /*
+         * L'entity è gestita dal persistence context: al commit Hibernate
+         * rileva la modifica e la persiste tramite dirty checking.
+         */
 
         return toResponse(book);
     }

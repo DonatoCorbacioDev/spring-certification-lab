@@ -8,8 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Rappresenta un editore persistito
- * nella tabella PUBLISHERS.
+ * Entity JPA che rappresenta un editore
+ * persistito nella tabella {@code publishers}.
  */
 @Entity
 @Table(name = "publishers")
@@ -23,7 +23,7 @@ public class PublisherEntity {
     private String name;
 
     /**
-     * Costruttore richiesto da JPA.
+     * Costruttore senza argomenti richiesto da JPA.
      */
     protected PublisherEntity() {
     }

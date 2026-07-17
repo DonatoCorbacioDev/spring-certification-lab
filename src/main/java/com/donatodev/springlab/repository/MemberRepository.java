@@ -3,20 +3,14 @@ package com.donatodev.springlab.repository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Simula il componente responsabile dell'accesso ai dati.
+ * Simula il layer di accesso ai dati per gli iscritti.
  *
- * @Repository permette a Spring di trovare la classe
- * tramite component scanning e registrarla come Bean.
- *
- * In questo esercizio non utilizziamo ancora un database:
- * stampiamo soltanto il risultato nella console.
+ * Questo esercizio non usa ancora una persistenza reale:
+ * il salvataggio viene rappresentato da un messaggio in console.
  */
 @Repository
 public class MemberRepository {
 
-    /**
-     * Simula il salvataggio di un iscritto.
-     */
     public void save(String memberName) {
         System.out.println(
                 "Iscritto salvato nel repository: " + memberName

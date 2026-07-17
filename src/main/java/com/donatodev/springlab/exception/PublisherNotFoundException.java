@@ -1,8 +1,7 @@
 package com.donatodev.springlab.exception;
 
 /**
- * Indica che l'editore richiesto
- * non esiste nel database.
+ * Segnala che l'editore richiesto non esiste.
  */
 public class PublisherNotFoundException extends RuntimeException {
 

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Legge valori dalla configurazione esterna.
+ * Espone alcuni valori letti dalla configurazione esterna.
  */
 @RestController
 @RequestMapping("/api/config")

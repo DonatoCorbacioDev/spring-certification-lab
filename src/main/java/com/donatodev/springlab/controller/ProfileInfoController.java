@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Mostra le configurazioni caricate
+ * Espone i valori di configurazione determinati
  * dal profilo Spring attivo.
  */
 @RestController

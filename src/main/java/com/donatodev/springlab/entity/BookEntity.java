@@ -7,7 +7,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * Rappresenta un libro persistito nel database.
+ * Entity JPA che rappresenta un libro persistito nel database.
+ *
+ * Il libro è il lato proprietario della relazione molti-a-uno con l'editore:
+ * la colonna {@code publisher_id} contiene la chiave esterna. Il fetch LAZY
+ * rimanda il caricamento dell'editore finché la relazione non viene utilizzata.
  */
 @Entity
 @Table(name = "books")
@@ -49,14 +53,11 @@ public class BookEntity {
     private LocalDateTime createdAt;
 
     /**
-     * Costruttore richiesto da JPA.
+     * Costruttore senza argomenti richiesto da JPA.
      */
     protected BookEntity() {
     }
 
-    /**
-     * Costruttore usato dal codice applicativo.
-     */
     public BookEntity(
             String title,
             String author,
@@ -77,11 +78,8 @@ public class BookEntity {
     }
 
     /**
-     * Registra il prestito di una copia.
-     *
-     * La Entity protegge la regola:
-     * non si può prestare un libro
-     * quando non ci sono copie disponibili.
+     * Registra il prestito di una copia applicando la regola di dominio
+     * che impedisce di prestare un libro non disponibile.
      */
     public void borrowCopy() {
         if (copies == null || copies <= 0) {

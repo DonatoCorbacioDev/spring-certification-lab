@@ -10,19 +10,15 @@ import java.util.Arrays;
 import java.util.Map;
 
 /**
- * Permette di osservare alcuni Bean registrati
- * nell'ApplicationContext.
+ * Runner didattico che permette di osservare alcuni bean registrati
+ * nell'{@link ApplicationContext}.
  *
  * L'ApplicationContext è il container principale di Spring:
- * crea, configura, conserva e collega i Bean.
+ * crea, configura, conserva e collega i bean dell'applicazione.
  */
 @Component
 public class BeanInspectorRunner implements CommandLineRunner {
 
-    /*
-     * Spring inietta il proprio ApplicationContext
-     * tramite Constructor Injection.
-     */
     private final ApplicationContext applicationContext;
 
     public BeanInspectorRunner(
@@ -34,19 +30,13 @@ public class BeanInspectorRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        /*
-         * Recupero i nomi di tutti i Bean
-         * registrati nell'ApplicationContext.
-         */
+        // Recupera i nomi di tutti i bean registrati nel container.
         String[] beanNames =
                 applicationContext.getBeanDefinitionNames();
 
         System.out.println("\n=== BEAN DEL LABORATORIO ===");
 
-        /*
-         * Mostro soltanto alcuni Bean
-         * appartenenti al nostro progetto.
-         */
+        // Limita l'output ai bean rilevanti per questo esercizio.
         Arrays.stream(beanNames)
                 .filter(beanName -> {
                     String lowerCaseName = beanName.toLowerCase();
@@ -59,29 +49,19 @@ public class BeanInspectorRunner implements CommandLineRunner {
                 .sorted()
                 .forEach(System.out::println);
 
-        /*
-         * Recupero due volte MemberService
-         * direttamente dal container Spring.
-         */
+        // Recupera due volte il bean per dimostrarne lo scope singleton.
         MemberService firstMemberService =
                 applicationContext.getBean(MemberService.class);
 
         MemberService secondMemberService =
                 applicationContext.getBean(MemberService.class);
 
-        /*
-         * Verifico se Spring restituisce
-         * la stessa istanza singleton.
-         */
         System.out.println(
                 "MemberService è la stessa istanza? "
                         + (firstMemberService == secondMemberService)
         );
 
-        /*
-         * Recupero tutti i Bean che implementano
-         * l'interfaccia NotificationService.
-         */
+        // Recupera tutte le strategie di notifica gestite dal container.
         Map<String, NotificationService> notificationServices =
                 applicationContext.getBeansOfType(
                         NotificationService.class

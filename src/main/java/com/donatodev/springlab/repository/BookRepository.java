@@ -15,8 +15,8 @@ public interface BookRepository
         extends JpaRepository<BookEntity, Long> {
 
     /**
-     * Query derivata:
-     * filtra per categoria e applica paginazione.
+     * Query derivata dal nome del metodo: filtra per categoria
+     * e applica la paginazione ricevuta.
      */
     Page<BookEntity> findByCategory(
             BookCategory category,
@@ -24,8 +24,8 @@ public interface BookRepository
     );
 
     /**
-     * Query derivata su una relazione:
-     * filtra usando publisher.id.
+     * Query derivata che attraversa la relazione {@code publisher}
+     * e filtra in base al suo identificativo.
      */
     Page<BookEntity> findByPublisher_Id(
             Long publisherId,
@@ -33,8 +33,8 @@ public interface BookRepository
     );
 
     /**
-     * Query derivata con ricerca parziale
-     * e ordinamento dinamico.
+     * Query derivata per una ricerca parziale, senza distinzione
+     * tra maiuscole e minuscole, con ordinamento dinamico.
      */
     List<BookEntity> findByAuthorContainingIgnoreCase(
             String text,
@@ -42,10 +42,10 @@ public interface BookRepository
     );
 
     /**
-     * Query JPQL esplicita.
+     * Query JPQL esplicita per una ricerca parziale sul titolo.
      *
-     * BookEntity e title sono nomi Java,
-     * non nomi di tabella o colonne SQL.
+     * JPQL usa il nome dell'entity e dei suoi attributi Java,
+     * non i nomi della tabella e delle colonne SQL.
      */
     @Query("""
             select book

@@ -9,8 +9,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * Dati ricevuti dal client
+ * DTO di richiesta contenente i dati ricevuti dal client
  * per creare un nuovo libro.
+ *
+ * I vincoli Bean Validation proteggono il confine HTTP
+ * prima che la richiesta raggiunga il service.
  */
 public record BookRequest(
 

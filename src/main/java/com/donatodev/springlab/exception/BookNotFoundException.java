@@ -1,8 +1,7 @@
 package com.donatodev.springlab.exception;
 
 /**
- * Rappresenta il caso in cui
- * un libro richiesto non esiste.
+ * Segnala che il libro richiesto non esiste.
  */
 public class BookNotFoundException extends RuntimeException {
 

@@ -14,8 +14,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Inserisce editori e libri iniziali
- * usando Spring Data JPA.
+ * Data loader didattico che inserisce editori e libri iniziali
+ * tramite i repository Spring Data JPA.
  */
 @Component
 public class BookDataLoader implements CommandLineRunner {
@@ -34,18 +34,14 @@ public class BookDataLoader implements CommandLineRunner {
     @Override
     public void run(String @NonNull ... args) {
 
-        /*
-         * Evita di reinserire i dati
-         * se il database contiene già libri.
-         */
+        // Evita di reinserire i dati se il database contiene già libri.
         if (bookRepository.count() > 0) {
             return;
         }
 
         /*
-         * Prima salviamo gli editori,
-         * così otteniamo PublisherEntity persistenti
-         * con un identificativo generato.
+         * Gli editori vengono salvati per primi, così i libri possono
+         * riferirsi a entity persistenti dotate di identificativo.
          */
         PublisherEntity prenticeHall =
                 publisherRepository.save(
@@ -63,7 +59,7 @@ public class BookDataLoader implements CommandLineRunner {
                 );
 
         /*
-         * Creiamo abbastanza libri per osservare:
+         * Il dataset contiene abbastanza libri per osservare:
          *
          * - paginazione;
          * - filtro per categoria;

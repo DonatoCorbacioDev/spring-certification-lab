@@ -1,7 +1,7 @@
 package com.donatodev.springlab.entity;
 
 /**
- * Categorie disponibili nel catalogo.
+ * Categorie ammesse nel catalogo dei libri.
  */
 public enum BookCategory {
 

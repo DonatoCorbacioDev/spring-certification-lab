@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Espone informazioni dimostrative
- * sull'auto-configurazione di Spring Boot.
+ * Espone endpoint didattici dedicati
+ * all'autoconfigurazione di Spring Boot.
  */
 @RestController
 @RequestMapping("/api/autoconfig")

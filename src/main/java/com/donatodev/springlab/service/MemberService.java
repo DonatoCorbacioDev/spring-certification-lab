@@ -6,27 +6,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
- * Gestisce la logica applicativa relativi agli iscritti.
+ * Gestisce la logica applicativa relativa agli iscritti.
  *
- * Questa classe non crea direttamente EmailNotificationService:
- * dipende dall'interfaccia NotificationService e riceve
- * l'implementazione concreta tramite Constructor Injection.
+ * Dipende dal contratto {@link NotificationService}, non da una sua
+ * implementazione concreta, e riceve le dipendenze via costruttore.
  */
 @Service
 public class MemberService {
 
-    /**
-     * la dipendenza è final perché MemberService ne ha bisogno
-     * per funzionare e non deve ssere sostituita dopo la creazione
-     */
     private final NotificationService notificationService;
 
     private final MemberRepository memberRepository;
 
-    /**
-     * Spring usa questo costruttore per iniettare il Bean
-     * che implementa NotificationService.
-     */
     public MemberService(@Qualifier("smsNotificationService")
                          NotificationService notificationService,
                          MemberRepository memberRepository) {
@@ -35,8 +26,8 @@ public class MemberService {
     }
 
     /**
-     * Simula la registrazione di un nuovo iscritto
-     * e richiede l'invio di una notifica di benvenuto.
+     * Coordina il salvataggio di un iscritto e l'invio
+     * della notifica di benvenuto.
      */
     public void registerMember(String memberName) {
 

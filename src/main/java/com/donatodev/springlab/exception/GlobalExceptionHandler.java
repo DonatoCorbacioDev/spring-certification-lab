@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 
 /**
- * Centralizza la gestione degli errori
- * generati dalle API REST.
+ * Traduce le eccezioni applicative gestite in risposte HTTP coerenti,
+ * evitando di distribuire questa responsabilità tra i controller.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

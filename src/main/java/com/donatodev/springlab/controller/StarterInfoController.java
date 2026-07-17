@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Espone informazioni dimostrative
- * sugli Spring Boot starter.
+ * Espone endpoint didattici dedicati
+ * agli starter di Spring Boot.
  */
 @RestController
 @RequestMapping("/api/starters")

@@ -3,8 +3,8 @@ package com.donatodev.springlab.dto.response;
 import java.time.LocalDateTime;
 
 /**
- * Rappresenta la risposta JSON restituita
- * quando si verifica un errore nelle API.
+ * DTO di risposta usato per rappresentare in modo uniforme
+ * gli errori gestiti dalle API REST.
  */
 public record ErrorResponse(
         LocalDateTime timestamp,
