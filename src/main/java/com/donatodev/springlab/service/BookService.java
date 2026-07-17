@@ -2,12 +2,16 @@ package com.donatodev.springlab.service;
 
 import com.donatodev.springlab.dto.request.BookRequest;
 import com.donatodev.springlab.dto.response.BookResponse;
+import com.donatodev.springlab.entity.BookCategory;
 import com.donatodev.springlab.entity.BookEntity;
 import com.donatodev.springlab.entity.PublisherEntity;
 import com.donatodev.springlab.exception.BookNotFoundException;
 import com.donatodev.springlab.exception.PublisherNotFoundException;
 import com.donatodev.springlab.repository.BookRepository;
 import com.donatodev.springlab.repository.PublisherRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,5 +101,47 @@ public class BookService {
                 entity.getPublisher().getId(),
                 entity.getPublisher().getName()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BookResponse> findByCategory(
+            BookCategory category,
+            Pageable pageable
+    ) {
+        return bookRepository
+                .findByCategory(category, pageable)
+                .map(this::toResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BookResponse> findByPublisher(
+            Long publisherId,
+            Pageable pageable
+    ) {
+        return bookRepository
+                .findByPublisher_Id(publisherId, pageable)
+                .map(this::toResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BookResponse> searchByTitle(
+            String text,
+            Pageable pageable
+    ) {
+        return bookRepository
+                .searchByTitle(text, pageable)
+                .map(this::toResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookResponse> findByAuthor(
+            String text,
+            Sort sort
+    ) {
+        return bookRepository
+                .findByAuthorContainingIgnoreCase(text, sort)
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 }
