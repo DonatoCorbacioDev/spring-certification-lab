@@ -1,17 +1,13 @@
 package com.donatodev.springlab.controller;
 
+import com.donatodev.springlab.dto.request.BookRequest;
 import com.donatodev.springlab.dto.response.BookResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Espone gli endpoint REST dimostrativi
- * per consultare il catalogo della biblioteca.
- */
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
@@ -50,5 +46,21 @@ public class BookController {
                 "Autore demo",
                 true
         );
+    }
+
+    @PostMapping
+    public ResponseEntity<BookResponse> create(
+            @RequestBody BookRequest request
+    ) {
+        BookResponse response = new BookResponse(
+                4L,
+                request.title(),
+                request.author(),
+                true
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 }
