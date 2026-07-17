@@ -1,0 +1,10 @@
+server:
+  port: 8082
+
+app:
+  environment: prod
+  message: Production profile active - demo configuration
+
+logging:
+  level:
+    com.donatodev.springlab: WARN

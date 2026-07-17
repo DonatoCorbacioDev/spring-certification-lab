@@ -1,12 +1,13 @@
 server:
-  port: 8081
+  port: 8080
 
 spring:
   application:
     name: spring-certification-lab
 
 app:
-  message: Configuration loaded from application.yml
+  environment: default
+  message: Default configuration loaded
   owner: Donato
 
 logging:

@@ -1,0 +1,10 @@
+server:
+  port: 8081
+
+app:
+  environment: dev
+  message: Development profile active
+
+logging:
+  level:
+    com.donatodev.springlab: DEBUG
