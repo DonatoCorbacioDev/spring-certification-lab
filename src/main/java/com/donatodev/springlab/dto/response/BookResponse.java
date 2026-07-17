@@ -8,6 +8,7 @@ public record BookResponse(
         Long id,
         String title,
         String author,
+        Integer copies,
         boolean available
 ) {
 }

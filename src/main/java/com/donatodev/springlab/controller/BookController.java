@@ -3,6 +3,7 @@ package com.donatodev.springlab.controller;
 import com.donatodev.springlab.dto.request.BookRequest;
 import com.donatodev.springlab.dto.response.BookResponse;
 import com.donatodev.springlab.service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,7 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<BookResponse> create(
-            @RequestBody BookRequest request
+            @Valid @RequestBody BookRequest request
     ) {
         BookResponse response =
                 bookService.create(request);

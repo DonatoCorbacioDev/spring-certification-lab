@@ -26,6 +26,7 @@ public class BookRepository {
                 nextId++,
                 "Clean Code",
                 "Robert C. Martin",
+                2,
                 true
         ));
 
@@ -33,6 +34,7 @@ public class BookRepository {
                 nextId++,
                 "Effective Java",
                 "Joshua Bloch",
+                0,
                 false
         ));
 
@@ -40,6 +42,7 @@ public class BookRepository {
                 nextId++,
                 "Spring in Action",
                 "Craig Walls",
+                1,
                 true
         ));
     }
@@ -56,13 +59,15 @@ public class BookRepository {
 
     public BookResponse save(
             String title,
-            String author
+            String author,
+            Integer copies
     ) {
         BookResponse book = new BookResponse(
                 nextId++,
                 title,
                 author,
-                true
+                copies,
+                copies > 0
         );
 
         books.add(book);

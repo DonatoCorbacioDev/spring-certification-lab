@@ -33,17 +33,17 @@ public class BookService {
                                 id,
                                 "Libro non trovato demo",
                                 "N/A",
+                                0,
                                 false
                         )
                 );
     }
 
-    public BookResponse create(
-            BookRequest request
-    ) {
+    public BookResponse create(BookRequest request) {
         return bookRepository.save(
                 request.title(),
-                request.author()
+                request.author(),
+                request.copies()
         );
     }
 }
