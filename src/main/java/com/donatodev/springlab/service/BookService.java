@@ -2,6 +2,7 @@ package com.donatodev.springlab.service;
 
 import com.donatodev.springlab.dto.request.BookRequest;
 import com.donatodev.springlab.dto.response.BookResponse;
+import com.donatodev.springlab.exception.BookNotFoundException;
 import com.donatodev.springlab.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,14 +29,8 @@ public class BookService {
 
     public BookResponse findById(Long id) {
         return bookRepository.findById(id)
-                .orElse(
-                        new BookResponse(
-                                id,
-                                "Libro non trovato demo",
-                                "N/A",
-                                0,
-                                false
-                        )
+                .orElseThrow(
+                        () -> new BookNotFoundException(id)
                 );
     }
 
