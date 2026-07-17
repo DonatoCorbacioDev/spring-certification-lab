@@ -1,14 +1,24 @@
 package com.donatodev.springlab.dto.response;
 
+import com.donatodev.springlab.entity.BookCategory;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 /**
- * Rappresenta i dati di un libro
- * restituiti al client tramite API REST.
+ * Dati del libro restituiti
+ * dalle API REST.
  */
 public record BookResponse(
         Long id,
         String title,
         String author,
         Integer copies,
+        BigDecimal replacementCost,
+        BookCategory category,
+        LocalDate publishedDate,
+        LocalDateTime createdAt,
         boolean available
 ) {
 }

@@ -1,77 +1,14 @@
 package com.donatodev.springlab.repository;
 
-import com.donatodev.springlab.dto.response.BookResponse;
-import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import com.donatodev.springlab.entity.BookEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Repository temporaneo in memoria.
+ * Repository Spring Data JPA per BookEntity.
  *
- * Non utilizza ancora un database:
- * i dati vengono persi al riavvio dell'applicazione.
+ * Spring Data crea automaticamente
+ * l'implementazione concreta a runtime.
  */
-@Repository
-public class BookRepository {
-
-    private final List<BookResponse> books =
-            new ArrayList<>();
-
-    private long nextId = 1L;
-
-    public BookRepository() {
-        books.add(new BookResponse(
-                nextId++,
-                "Clean Code",
-                "Robert C. Martin",
-                2,
-                true
-        ));
-
-        books.add(new BookResponse(
-                nextId++,
-                "Effective Java",
-                "Joshua Bloch",
-                0,
-                false
-        ));
-
-        books.add(new BookResponse(
-                nextId++,
-                "Spring in Action",
-                "Craig Walls",
-                1,
-                true
-        ));
-    }
-
-    public List<BookResponse> findAll() {
-        return List.copyOf(books);
-    }
-
-    public Optional<BookResponse> findById(Long id) {
-        return books.stream()
-                .filter(book -> book.id().equals(id))
-                .findFirst();
-    }
-
-    public BookResponse save(
-            String title,
-            String author,
-            Integer copies
-    ) {
-        BookResponse book = new BookResponse(
-                nextId++,
-                title,
-                author,
-                copies,
-                copies > 0
-        );
-
-        books.add(book);
-
-        return book;
-    }
+public interface BookRepository
+        extends JpaRepository<BookEntity, Long> {
 }

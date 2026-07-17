@@ -2,30 +2,35 @@ package com.donatodev.springlab.runner;
 
 import com.donatodev.springlab.entity.BookCategory;
 import com.donatodev.springlab.entity.BookEntity;
-import jakarta.persistence.EntityManager;
+import com.donatodev.springlab.repository.BookRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
- * Inserisce due libri nel database H2
- * all'avvio dell'applicazione.
+ * Inserisce alcuni libri iniziali
+ * usando Spring Data JPA.
  */
 @Component
 public class BookDataLoader implements CommandLineRunner {
 
-    private final EntityManager entityManager;
+    private final BookRepository bookRepository;
 
-    public BookDataLoader(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public BookDataLoader(
+            BookRepository bookRepository
+    ) {
+        this.bookRepository = bookRepository;
     }
 
     @Override
-    @Transactional
     public void run(String... args) {
+        if (bookRepository.count() > 0) {
+            return;
+        }
+
         BookEntity firstBook = new BookEntity(
                 "Clean Code",
                 "Robert C. Martin",
@@ -44,16 +49,16 @@ public class BookDataLoader implements CommandLineRunner {
                 LocalDate.of(2018, 1, 6)
         );
 
-        entityManager.persist(firstBook);
-        entityManager.persist(secondBook);
-
-        entityManager.flush();
+        List<BookEntity> savedBooks =
+                bookRepository.saveAll(
+                        List.of(firstBook, secondBook)
+                );
 
         System.out.println(
-                "Book IDs persisted in H2: "
-                        + firstBook.getId()
-                        + ", "
-                        + secondBook.getId()
+                "Book IDs persisted via JpaRepository: "
+                        + savedBooks.stream()
+                        .map(BookEntity::getId)
+                        .toList()
         );
     }
 }
