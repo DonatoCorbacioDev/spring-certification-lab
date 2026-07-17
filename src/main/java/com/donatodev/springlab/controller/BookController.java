@@ -2,62 +2,47 @@ package com.donatodev.springlab.controller;
 
 import com.donatodev.springlab.dto.request.BookRequest;
 import com.donatodev.springlab.dto.response.BookResponse;
+import com.donatodev.springlab.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Gestisce le richieste HTTP relative ai libri
+ * e delega la logica al BookService.
+ */
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
 
+    private final BookService bookService;
+
+    public BookController(
+            BookService bookService
+    ) {
+        this.bookService = bookService;
+    }
+
     @GetMapping
     public List<BookResponse> findAll() {
-        return List.of(
-                new BookResponse(
-                        1L,
-                        "Clean Code",
-                        "Robert C. Martin",
-                        true
-                ),
-                new BookResponse(
-                        2L,
-                        "Effective Java",
-                        "Joshua Bloch",
-                        false
-                ),
-                new BookResponse(
-                        3L,
-                        "Spring in Action",
-                        "Craig Walls",
-                        true
-                )
-        );
+        return bookService.findAll();
     }
 
     @GetMapping("/{id}")
     public BookResponse findById(
             @PathVariable Long id
     ) {
-        return new BookResponse(
-                id,
-                "Libro demo " + id,
-                "Autore demo",
-                true
-        );
+        return bookService.findById(id);
     }
 
     @PostMapping
     public ResponseEntity<BookResponse> create(
             @RequestBody BookRequest request
     ) {
-        BookResponse response = new BookResponse(
-                4L,
-                request.title(),
-                request.author(),
-                true
-        );
+        BookResponse response =
+                bookService.create(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
