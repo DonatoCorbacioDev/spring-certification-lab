@@ -44,4 +44,32 @@ public class SecurityInfoController {
                       "authorities", authentication.getAuthorities()
         );
     }
+
+    /**
+     * Restituisce un messaggio accessibile soltanto
+     * agli utenti con ruolo ADMIN.
+     *
+     * La protezione non viene definita direttamente nel controller:
+     * la regola di autorizzazione è configurata nella SecurityFilterChain.
+     *
+     * @return messaggio riservato agli amministratori
+     */
+    @GetMapping("/admin")
+    public String getAdminInfo() {
+        return "This endpoint is available only to administrators";
+    }
+
+    /**
+     * Restituisce un messaggio accessibile agli utenti
+     * con ruolo USER oppure ADMIN.
+     *
+     * La regola di autorizzazione viene definita
+     * centralmente nella SecurityFilterChain.
+     *
+     * @return messaggio disponibile agli utenti autorizzati
+     */
+    @GetMapping("/user")
+    public String getUserInfo() {
+        return "This endpoint is available to users and administrators";
+    }
 }

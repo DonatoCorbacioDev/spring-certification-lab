@@ -35,6 +35,14 @@ public class SecurityConfig {
                         // Consente l'accesso senza autenticazione.
                         .requestMatchers("/api/security/public").permitAll()
 
+                        // Richiede un utente autenticato con ruolo ADMIN.
+                        //hasRole("ADMIN) verifica internamente l'authority ROLE_ADMIN.
+                        .requestMatchers("/api/security/admin").hasRole("ADMIN")
+
+                        // Consente l'accesso agli utenti con ruolo USER oppure ADMIN.
+                        .requestMatchers("/api/security/user")
+                        .hasAnyRole("USER", "ADMIN")
+
                         // Tutti gli altri endpoint richiedono autenticazione.
                         .anyRequest().authenticated()
                 )
@@ -75,6 +83,12 @@ public class SecurityConfig {
                 .roles("USER")
                 .build();
 
-        return new InMemoryUserDetailsManager(user);
+        UserDetails admin = User.withUsername("admin")
+                .password(passwordEncoder.encode("Admin123!"))
+                .roles("ADMIN")
+                .build();
+
+
+        return new InMemoryUserDetailsManager(user, admin);
     }
 }
