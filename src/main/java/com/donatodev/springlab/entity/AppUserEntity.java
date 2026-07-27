@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
  *
  * <p>Questa Entity appartiene al modello del laboratorio e rimane distinta
  * dal modello {@code UserDetails} usato internamente da Spring Security.
- * La conversione tra i due modelli sarà responsabilità del
+ * La conversione tra i due modelli è responsabilità del
  * {@code DatabaseUserDetailsService}.</p>
  *
  * <p>La password non viene conservata in chiaro: {@code passwordHash}
@@ -24,9 +24,6 @@ import jakarta.persistence.Table;
 @Table(name = "app_users")
 public class AppUserEntity {
 
-    /**
-     * Identificatore generato dal database.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -58,9 +55,7 @@ public class AppUserEntity {
     @Column(nullable = false)
     private boolean enabled;
 
-    /**
-     * Costruttore richiesto da JPA.
-     */
+    /** Costruttore richiesto da JPA. */
     protected AppUserEntity() {
     }
 

@@ -27,13 +27,6 @@ public class SecurityDataLoader implements CommandLineRunner {
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
 
-    /**
-     * Riceve tramite constructor injection il repository degli utenti
-     * e il componente responsabile della codifica delle password.
-     *
-     * @param appUserRepository repository degli utenti applicativi
-     * @param passwordEncoder componente per la codifica delle password
-     */
     public SecurityDataLoader(
             AppUserRepository appUserRepository,
             PasswordEncoder passwordEncoder) {
@@ -43,7 +36,8 @@ public class SecurityDataLoader implements CommandLineRunner {
     }
 
     /**
-     * Inserisce gli utenti iniziali soltanto quando la tabella è vuota.
+     * Inserisce gli utenti iniziali soltanto quando la tabella è vuota,
+     * codificando le credenziali prima della persistenza.
      *
      * @param args argomenti ricevuti all'avvio dell'applicazione
      */

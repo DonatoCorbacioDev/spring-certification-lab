@@ -24,11 +24,6 @@ public class DatabaseUserDetailsService implements UserDetailsService {
 
     private final AppUserRepository appUserRepository;
 
-    /**
-     * Riceve il repository tramite constructor injection.
-     *
-     * @param appUserRepository repository degli utenti applicativi
-     */
     public DatabaseUserDetailsService(
             AppUserRepository appUserRepository) {
 
@@ -37,7 +32,9 @@ public class DatabaseUserDetailsService implements UserDetailsService {
 
     /**
      * Cerca un utente applicativo attraverso lo username e lo converte
-     * nel modello UserDetails utilizzato da Spring Security.
+     * nel modello {@link UserDetails}. Il builder {@code roles(...)} trasforma
+     * {@code USER}/{@code ADMIN} in {@code ROLE_USER}/{@code ROLE_ADMIN};
+     * lo stato persistito viene inoltre tradotto nel flag {@code disabled}.
      *
      * @param username username ricevuto durante l'autenticazione
      * @return dati dell'utente nel formato richiesto da Spring Security

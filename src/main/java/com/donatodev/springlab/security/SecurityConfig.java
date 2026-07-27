@@ -9,14 +9,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * Configura le regole di sicurezza HTTP dell'applicazione.
+ * Definisce il confine di sicurezza HTTP dell'applicazione.
+ *
+ * <p>Le regole sono valutate nell'ordine dichiarato: gli endpoint
+ * dimostrativi ricevono vincoli specifici, mentre ogni altra richiesta
+ * richiede un utente autenticato. Form login e HTTP Basic condividono
+ * lo stesso processo di autenticazione basato sugli utenti persistiti.</p>
  */
 @Configuration
 public class SecurityConfig {
 
     /**
-     * Definisce quali richieste possono essere eseguite liberamente
-     * e quali richiedono un utente autenticato.
+     * Costruisce la catena applicando prima i matcher specifici e infine
+     * la regola generale {@code authenticated()}.
      *
      * @param http configurazione della sicurezza HTTP
      * @return catena di filtri configurata
@@ -28,33 +33,25 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        // Consente l'accesso senza autenticazione.
                         .requestMatchers("/api/security/public").permitAll()
 
-                        // Richiede un utente autenticato con ruolo ADMIN.
-                        // hasRole("ADMIN) verifica internamente l'authority ROLE_ADMIN.
+                        // hasRole("ADMIN") verifica l'authority ROLE_ADMIN.
                         .requestMatchers("/api/security/admin").hasRole("ADMIN")
 
-                        // Consente l'accesso agli utenti con ruolo USER oppure ADMIN.
                         .requestMatchers("/api/security/user")
                         .hasAnyRole("USER", "ADMIN")
 
-                        // Tutti gli altri endpoint richiedono autenticazione.
                         .anyRequest().authenticated()
                 )
-                // Mantiene disponibile la pagina di login predefinita.
                 .formLogin(Customizer.withDefaults())
-
-                // Consente anche l'autenticazione HTTP Basic
-                // per client come Postman o curl.
                 .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
 
     /**
-     * Fornisce il componente utilizzato per codificare
-     * e verificare le password degli utenti.
+     * Fornisce il {@link PasswordEncoder} delegante usato sia per codificare
+     * le password iniziali sia per confrontarle durante l'autenticazione.
      *
      * @return encoder delegante per la password
      */
