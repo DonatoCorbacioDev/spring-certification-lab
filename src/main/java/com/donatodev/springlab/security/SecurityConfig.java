@@ -4,12 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -36,7 +32,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/security/public").permitAll()
 
                         // Richiede un utente autenticato con ruolo ADMIN.
-                        //hasRole("ADMIN) verifica internamente l'authority ROLE_ADMIN.
+                        // hasRole("ADMIN) verifica internamente l'authority ROLE_ADMIN.
                         .requestMatchers("/api/security/admin").hasRole("ADMIN")
 
                         // Consente l'accesso agli utenti con ruolo USER oppure ADMIN.
@@ -65,30 +61,5 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-    /**
-     * Crea un archivio utenti in memoria utilizzato
-     * per l'autenticazione durante il laboratorio.
-     *
-     * @param passwordEncoder componente utilizzato
-     *                        per codificare la password
-     * @return servizio contenente gli utenti configurati
-     */
-    @Bean
-    UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-
-        UserDetails user = User.withUsername("donato")
-                .password(passwordEncoder.encode("Password123!"))
-                .roles("USER")
-                .build();
-
-        UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder.encode("Admin123!"))
-                .roles("ADMIN")
-                .build();
-
-
-        return new InMemoryUserDetailsManager(user, admin);
     }
 }
