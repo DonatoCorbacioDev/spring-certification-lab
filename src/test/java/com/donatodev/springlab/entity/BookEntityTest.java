@@ -1,5 +1,6 @@
 package com.donatodev.springlab.entity;
 
+import com.donatodev.springlab.exception.BookNotAvailableException;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -23,7 +24,7 @@ class BookEntityTest {
     void borrowCopyThrowsWhenNoCopiesAreAvailable() {
         BookEntity book = createBook(0);
 
-        assertThrows(IllegalStateException.class, book::borrowCopy);
+        assertThrows(BookNotAvailableException.class, book::borrowCopy);
     }
 
     private BookEntity createBook(int copies) {

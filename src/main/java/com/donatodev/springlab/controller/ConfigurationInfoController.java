@@ -1,6 +1,6 @@
 package com.donatodev.springlab.controller;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.donatodev.springlab.config.AppProperties;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,25 +12,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/config")
 public class ConfigurationInfoController {
 
-    private final String appMessage;
-    private final String appOwner;
+    private final AppProperties appProperties;
 
-    public ConfigurationInfoController(
-            @Value("${app.message}") String appMessage,
-            @Value("${app.owner}") String appOwner
-    ) {
-        this.appMessage = appMessage;
-        this.appOwner = appOwner;
+    public ConfigurationInfoController(AppProperties appProperties) {
+        this.appProperties = appProperties;
     }
 
     @GetMapping("/message")
     public String message() {
-        return appMessage;
+        return appProperties.message();
     }
 
     @GetMapping("/owner")
     public String owner() {
-        return "Project owner: " + appOwner;
+        return "Project owner: " + appProperties.owner();
     }
 
     @GetMapping("/info")

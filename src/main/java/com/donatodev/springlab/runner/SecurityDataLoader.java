@@ -8,18 +8,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Inserisce nel database gli utenti didattici necessari
  * per il laboratorio Spring Security.
  *
- * <p>Le password vengono codificate tramite {@link PasswordEncoder}
- * prima che le Entity siano salvate. Nel database non viene quindi
- * memorizzata la password originale in chiaro.</p>
+ * <p>I valori di accesso sono casuali, effimeri e codificati tramite
+ * {@link PasswordEncoder} prima della persistenza. Non vengono esposti
+ * né conservati nel codice sorgente.</p>
  *
  * <p>Questo caricamento iniziale serve esclusivamente al laboratorio.
  * In un'applicazione reale gli utenti non verrebbero normalmente
- * creati con credenziali hard-coded nel codice sorgente.</p>
+ * creati in questo modo, ma tramite un processo di provisioning.</p>
  */
 @Component
 public class SecurityDataLoader implements CommandLineRunner {
@@ -37,7 +38,7 @@ public class SecurityDataLoader implements CommandLineRunner {
 
     /**
      * Inserisce gli utenti iniziali soltanto quando la tabella è vuota,
-     * codificando le credenziali prima della persistenza.
+     * codificando valori effimeri prima della persistenza.
      *
      * @param args argomenti ricevuti all'avvio dell'applicazione
      */
@@ -50,14 +51,14 @@ public class SecurityDataLoader implements CommandLineRunner {
 
         AppUserEntity donato = new AppUserEntity(
                 "donato",
-                passwordEncoder.encode("Password123!"),
+                passwordEncoder.encode(UUID.randomUUID().toString()),
                 UserRole.USER,
                 true
         );
 
         AppUserEntity admin = new AppUserEntity(
                 "admin",
-                passwordEncoder.encode("Admin123!"),
+                passwordEncoder.encode(UUID.randomUUID().toString()),
                 UserRole.ADMIN,
                 true
         );

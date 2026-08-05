@@ -29,6 +29,23 @@ app:
   message: Default configuration loaded
   owner: Donato
 
+info:
+  app:
+    name: Spring Certification Lab
+    description: Educational Spring Boot library API
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+  info:
+    env:
+      enabled: true
+
 logging:
   level:
     com.donatodev.springlab: INFO

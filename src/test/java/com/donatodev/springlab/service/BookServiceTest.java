@@ -6,6 +6,7 @@ import com.donatodev.springlab.entity.BookCategory;
 import com.donatodev.springlab.entity.BookEntity;
 import com.donatodev.springlab.entity.PublisherEntity;
 import com.donatodev.springlab.exception.BookNotFoundException;
+import com.donatodev.springlab.exception.BookNotAvailableException;
 import com.donatodev.springlab.exception.PublisherNotFoundException;
 import com.donatodev.springlab.repository.BookRepository;
 import com.donatodev.springlab.repository.PublisherRepository;
@@ -123,6 +124,22 @@ class BookServiceTest {
         verify(bookRepository).save(savedBook.capture());
         assertEquals(request.title(), savedBook.getValue().getTitle());
         assertEquals(publisher, savedBook.getValue().getPublisher());
+    }
+
+    @Test
+    void borrowCopyPropagatesNotAvailableException() {
+        BookEntity unavailableBook = createBook(
+                0, new PublisherEntity("Addison-Wesley")
+        );
+        when(bookRepository.findById(BOOK_ID))
+                .thenReturn(Optional.of(unavailableBook));
+
+        assertThrows(
+                BookNotAvailableException.class,
+                () -> bookService.borrowCopy(BOOK_ID)
+        );
+
+        verify(bookRepository).findById(BOOK_ID);
     }
 
     private BookEntity createBook(int copies, PublisherEntity publisher) {

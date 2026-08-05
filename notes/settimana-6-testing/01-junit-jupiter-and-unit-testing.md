@@ -18,7 +18,7 @@ Verificare in isolamento la regola di dominio con cui `BookEntity` presta una co
 BookEntity reale
   → borrowCopy()
   → verifica disponibilità
-  → decremento di una copia oppure IllegalStateException
+  → decremento di una copia oppure BookNotAvailableException
   → assertion JUnit
 ```
 
@@ -44,7 +44,7 @@ assertEquals(1, book.getCopies());
 ```java
 BookEntity book = createBook(0);
 
-assertThrows(IllegalStateException.class, book::borrowCopy);
+assertThrows(BookNotAvailableException.class, book::borrowCopy);
 ```
 
 ## Verifiche eseguite
@@ -57,7 +57,7 @@ assertThrows(IllegalStateException.class, book::borrowCopy);
 
 | Aspetto | Risultato |
 |---|---|
-| Eccezione a copie zero | Il codice corrente prevede `IllegalStateException` |
+| Eccezione a copie zero | Il codice corrente prevede `BookNotAvailableException` |
 | Costruzione dell'entity | È disponibile un costruttore applicativo pubblico completo |
 | Costruttore JPA | Resta protetto e non viene modificato per il test |
 | Numero iniziale di copie | Il caso positivo parte da `2` e verifica il valore esatto `1` |
@@ -74,11 +74,11 @@ Le regole di dominio che cambiano lo stato dovrebbero restare testabili senza in
 
 ## Risposta da colloquio in italiano
 
-Un unit test JUnit Jupiter crea direttamente l'oggetto reale, esegue un comportamento e osserva il risultato senza avviare il framework. Per `BookEntity.borrowCopy`, il caso disponibile verifica il decremento esatto con `assertEquals`; il caso esaurito verifica con `assertThrows` che sia sollevata `IllegalStateException`. I test sono rapidi e deterministici perché non coinvolgono Spring o il database.
+Un unit test JUnit Jupiter crea direttamente l'oggetto reale, esegue un comportamento e osserva il risultato senza avviare il framework. Per `BookEntity.borrowCopy`, il caso disponibile verifica il decremento esatto con `assertEquals`; il caso esaurito verifica con `assertThrows` che sia sollevata `BookNotAvailableException`. I test sono rapidi e deterministici perché non coinvolgono Spring o il database.
 
 ## Interview answer in English
 
-A JUnit Jupiter unit test creates the real domain object, invokes one behavior, and checks the observable result without starting Spring. The available-copy case asserts the exact decrement, while the exhausted-copy case asserts the current `IllegalStateException` contract.
+A JUnit Jupiter unit test creates the real domain object, invokes one behavior, and checks the observable result without starting Spring. The available-copy case asserts the exact decrement, while the exhausted-copy case asserts the specific `BookNotAvailableException` contract.
 
 ## Domande di ripasso
 

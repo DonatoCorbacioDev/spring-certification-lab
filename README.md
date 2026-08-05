@@ -1,281 +1,119 @@
 # Spring Certification Lab
 
-A personal learning project focused on understanding the core concepts of Spring Framework and Spring Boot through small, practical exercises.
+Spring Certification Lab is an educational Spring Boot backend used to practice core framework concepts through a small library API. The code favors explicit layers, focused tests, and production-readiness fundamentals over feature breadth.
 
-The repository is developed step by step and connects each concept to a real backend project: **Business Contracts Manager 2.0**.
-
-## Current Progress
-
-### Week 1 — Spring Core
-
-Topics covered:
-
-- Inversion of Control
-- Spring Beans
-- Dependency Injection
-- Constructor Injection
-- Component Scanning
-- Stereotype annotations
-- `@Primary`
-- `@Qualifier`
-- `ApplicationContext`
-- Bean inspection
-- Singleton scope
-- Stateless services
-
-## Project Flow
-
-```text
-MemberController
-        |
-        v
-MemberService
-        |
-        +--> MemberRepository
-        |
-        +--> NotificationService
-                  |
-                  +--> EmailNotificationService
-                  |
-                  +--> SmsNotificationService
-```
-
-Spring creates and connects these components through the IoC container.
-
-`MemberService` does not create its dependencies with `new`.  
-The required Beans are provided through constructor injection.
-
-## Main Components
-
-### `MemberController`
-
-Exposes a demonstration HTTP endpoint and delegates the request to `MemberService`.
-
-### `MemberService`
-
-Contains the application logic and coordinates:
-
-- member persistence;
-- notification delivery.
-
-### `MemberRepository`
-
-Simulates the data-access layer used to save a member.
-
-### `NotificationService`
-
-Defines the notification contract without depending on a specific implementation.
-
-Available implementations:
-
-- `EmailNotificationService`
-- `SmsNotificationService`
-
-## Constructor Injection
-
-`MemberService` receives its dependencies through the constructor:
-
-```java
-public MemberService(
-        NotificationService notificationService,
-        MemberRepository memberRepository
-) {
-    this.notificationService = notificationService;
-    this.memberRepository = memberRepository;
-}
-```
-
-Constructor injection makes dependencies:
-
-- explicit;
-- mandatory;
-- easier to test;
-- compatible with immutable `final` fields.
-
-## Multiple Beans of the Same Type
-
-Both notification services implement the same interface:
-
-```text
-NotificationService
-├── EmailNotificationService
-└── SmsNotificationService
-```
-
-`@Primary` identifies the default Bean.
-
-`@Qualifier` selects a specific Bean at an injection point.
-
-In this laboratory, `MemberService` explicitly uses:
-
-```java
-@Qualifier("smsNotificationService")
-NotificationService notificationService
-```
-
-Therefore, the registration flow sends an SMS notification.
-
-## ApplicationContext and Bean Inspection
-
-`ApplicationContext` is the main Spring container.
-
-It creates, configures, stores and connects the application Beans.
-
-The project inspects the registered Beans with:
-
-```java
-applicationContext.getBeanDefinitionNames();
-```
-
-It also retrieves all implementations of `NotificationService` with:
-
-```java
-applicationContext.getBeansOfType(
-        NotificationService.class
-);
-```
-
-This confirms that both notification implementations exist inside the container.
-
-## Singleton Scope
-
-`MemberService` is retrieved twice from the `ApplicationContext`:
-
-```java
-MemberService first =
-        applicationContext.getBean(MemberService.class);
-
-MemberService second =
-        applicationContext.getBean(MemberService.class);
-```
-
-The following comparison returns `true`:
-
-```java
-first == second
-```
-
-This demonstrates the default Spring singleton scope: the same Bean instance is reused inside the same `ApplicationContext`.
-
-## Stateless Services
-
-Singleton services should not store mutable, user-specific data in instance fields.
-
-Unsafe example:
-
-```java
-private String currentMemberName;
-```
-
-Correct approach:
-
-```java
-public void registerMember(String memberName)
-```
-
-Request-specific data should be passed through:
-
-- method parameters;
-- DTOs;
-- the database;
-- the session;
-- the `SecurityContext`.
-
-Stable dependencies can remain immutable fields:
-
-```java
-private final NotificationService notificationService;
-private final MemberRepository memberRepository;
-```
-
-## Demo Endpoint
-
-```http
-GET /api/members/register-demo
-```
-
-Expected flow:
-
-```text
-MemberController
--> MemberService
--> MemberRepository
--> SmsNotificationService
-```
-
-Expected console output:
-
-```text
-Iscritto salvato nel repository: Donato
-Iscritto registrato: Donato
-SMS inviato: Benvenuto in biblioteca, Donato
-```
-
-The console messages remain in Italian because they are part of the current exercise output. The repository documentation is written in English for professional presentation.
-
-## Run the Project
-
-Requirements:
+## Requirements and stack
 
 - Java 21
+- Spring Boot 4.1.x
 - Maven
+- Spring MVC and Bean Validation
+- Spring Data JPA, Hibernate, and H2
+- Spring Security with form login, HTTP Basic, and CSRF
+- Spring Boot Actuator
+- Spring AOP with AspectJ support
+- JUnit Jupiter, Mockito, MockMvc, and Spring Security Test
 
-Run from the terminal:
+## Architecture
+
+```text
+Security filter chain
+        -> Controller
+        -> Service
+        -> Repository
+        -> H2
+```
+
+Controllers own the HTTP contract, services coordinate transactional use cases, repositories provide persistence, and entities retain domain rules such as copy availability. DTOs keep the persistence model outside the public API.
+
+## Run the application
 
 ```bash
 mvn spring-boot:run
 ```
 
-Alternatively, run the main Spring Boot class from the IDE.
+The default profile listens on port `8080`. Activate a profile with a standard Spring Boot mechanism, for example:
 
-## Connection to Business Contracts Manager 2.0
-
-The same Spring Core concepts appear in **Business Contracts Manager 2.0**:
-
-```text
-ContractController
--> ContractService
--> ContractRepository
+```bash
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-Spring manages these components as Beans and connects them through constructor injection.
+Available configurations are:
 
-Possible multiple implementations include:
+- default: port `8080`, INFO application logging;
+- `dev`: port `8081`, DEBUG application logging;
+- `prod`: port `8082`, WARN application logging.
 
-```text
-NotificationService
-├── EmailNotificationService
-└── WhatsAppNotificationService
+H2 is in-memory and its schema is recreated at startup. Profile files override only their declared values; shared values remain in `application.yaml`.
 
-ExportService
-├── PdfExportService
-└── ExcelExportService
+## Main endpoints
+
+### Library API
+
+- `GET /api/books`
+- `GET /api/books/{id}`
+- `POST /api/books`
+- `PATCH /api/books/{id}/borrow`
+- `GET /api/books/search/by-category?category=TECHNOLOGY`
+- `GET /api/books/search/by-publisher?publisherId={id}`
+- `GET /api/books/search/by-title?text={text}`
+- `GET /api/books/search/by-author?text={text}&direction=asc`
+
+A borrow request for a book with no available copies returns HTTP `409 Conflict`. Invalid create requests return HTTP `400` before reaching the service.
+
+### Learning and configuration endpoints
+
+- `/api/config/**`
+- `/api/profiles/**`
+- `/api/boot/**`
+- `/api/starters/**`
+- `/api/autoconfig/**`
+- `GET /api/members/register-demo`
+
+### Security demonstration endpoints
+
+- `GET /api/security/public`: anonymous access;
+- `GET /api/security/me`: authenticated users;
+- `GET /api/security/user`: `USER` or `ADMIN`;
+- `GET /api/security/admin`: `ADMIN` only.
+
+## Security model
+
+All routes require authentication unless explicitly allowed. The public security demonstration and Actuator health endpoint are anonymous. Role checks use `ROLE_USER` and `ROLE_ADMIN`; CSRF remains enabled for state-changing browser requests.
+
+The application initializes educational database identities with non-recoverable, ephemeral startup values. No usable credentials are documented or stored in source control. Automated authorization tests use Spring Security test identities and do not rely on database accounts.
+
+## Actuator
+
+Only the following endpoints are exposed over HTTP:
+
+- `/actuator/health`: anonymous access, details shown only when authorized;
+- `/actuator/info`: `ADMIN` only;
+- `/actuator/metrics` and `/actuator/metrics/{name}`: `ADMIN` only.
+
+Sensitive endpoints such as environment, configuration properties, bean listings, dumps, and runtime logger configuration are not exposed.
+
+## Testing strategy
+
+Run all tests with:
+
+```bash
+mvn test
 ```
 
-Services such as `ContractService` and `AuthService` are normally singleton Beans and should remain stateless.
+The suite is layered:
 
-These concepts make the backend more modular, replaceable and easier to test.
+- pure unit tests for entity domain rules;
+- Mockito unit tests for service orchestration;
+- MVC slice tests for mapping, JSON, validation, and controller advice;
+- JPA slice tests with real H2 queries and relationships;
+- full integration tests for Security, CSRF, MVC, application logic, and Actuator;
+- a small context runner test for type-safe configuration binding.
 
-## Learning Goal
+## Learning notes
 
-The purpose of this repository is not only to write working code, but also to understand and explain:
+Versioned notes live under `notes/`, grouped by week and topic. Weeks 1–5 cover Spring Core, Boot, REST, JPA, and Security. Week 6 documents the testing layers, while Week 7 covers logging, Actuator, AOP, type-safe configuration, and final consolidation.
 
-- who creates the application objects;
-- how Spring discovers components;
-- how dependencies are injected;
-- how multiple implementations are resolved;
-- how Beans are stored in the `ApplicationContext`;
-- why singleton services should remain stateless.
+## Known limitations and future work
 
-## Roadmap
-
-Planned topics:
-
-- Week 1: Spring Core
-- Week 2: Spring Boot configuration
-- Week 3: REST APIs and validation
-- Week 4: JPA and Hibernate
-- Week 5: Spring Security
-- Week 6: Testing
-- Week 7: Logging, Actuator and AOP
-- Week 8: Review, interview questions and certification preparation
+This is a learning repository, not a production library platform. It uses an in-memory database, startup demo data, and a deliberately small domain. It does not include database migrations, durable identity provisioning, distributed observability, concurrency control, or a frontend. Those concerns should be evaluated only when a real deployment requires them.

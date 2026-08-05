@@ -33,6 +33,8 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers("/actuator/**").hasRole("ADMIN")
                         .requestMatchers("/api/security/public").permitAll()
 
                         // hasRole("ADMIN") verifica l'authority ROLE_ADMIN.

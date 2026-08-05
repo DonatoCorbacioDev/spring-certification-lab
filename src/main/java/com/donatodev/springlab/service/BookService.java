@@ -9,6 +9,8 @@ import com.donatodev.springlab.exception.BookNotFoundException;
 import com.donatodev.springlab.exception.PublisherNotFoundException;
 import com.donatodev.springlab.repository.BookRepository;
 import com.donatodev.springlab.repository.PublisherRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,6 +27,8 @@ import java.util.List;
  */
 @Service
 public class BookService {
+
+    private static final Logger log = LoggerFactory.getLogger(BookService.class);
 
     private final BookRepository bookRepository;
     private final PublisherRepository publisherRepository;
@@ -48,10 +52,15 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public BookResponse findById(Long id) {
+        log.debug("Ricerca libro con id {}", id);
+
         BookEntity entity = bookRepository
                 .findById(id)
                 .orElseThrow(
-                        () -> new BookNotFoundException(id)
+                        () -> {
+                            log.warn("Libro non trovato con id {}", id);
+                            return new BookNotFoundException(id);
+                        }
                 );
 
         return toResponse(entity);
@@ -79,6 +88,12 @@ public class BookService {
 
         BookEntity savedEntity =
                 bookRepository.save(entity);
+
+        log.info(
+                "Libro creato con id {} per editore {}",
+                savedEntity.getId(),
+                publisher.getId()
+        );
 
         return toResponse(savedEntity);
     }
@@ -157,6 +172,12 @@ public class BookService {
                 );
 
         book.borrowCopy();
+
+        log.info(
+                "Prestito registrato per libro {}: copie rimanenti {}",
+                id,
+                book.getCopies()
+        );
 
         /*
          * L'entity è gestita dal persistence context: al commit Hibernate

@@ -6,6 +6,8 @@ import com.donatodev.springlab.entity.PublisherEntity;
 import com.donatodev.springlab.repository.BookRepository;
 import com.donatodev.springlab.repository.PublisherRepository;
 import org.jspecify.annotations.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,8 @@ import java.util.List;
  */
 @Component
 public class BookDataLoader implements CommandLineRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(BookDataLoader.class);
 
     private final BookRepository bookRepository;
     private final PublisherRepository publisherRepository;
@@ -143,12 +147,10 @@ public class BookDataLoader implements CommandLineRunner {
 
         bookRepository.saveAll(books);
 
-        System.out.println(
-                "Dati iniziali caricati: "
-                        + publisherRepository.count()
-                        + " editori e "
-                        + bookRepository.count()
-                        + " libri"
+        log.info(
+                "Dati iniziali caricati: {} editori e {} libri",
+                publisherRepository.count(),
+                bookRepository.count()
         );
     }
 }

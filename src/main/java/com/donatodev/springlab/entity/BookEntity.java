@@ -1,5 +1,6 @@
 package com.donatodev.springlab.entity;
 
+import com.donatodev.springlab.exception.BookNotAvailableException;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -83,9 +84,7 @@ public class BookEntity {
      */
     public void borrowCopy() {
         if (copies == null || copies <= 0) {
-            throw new IllegalStateException(
-                    "Nessuna copia disponibile per il libro: " + title
-            );
+            throw new BookNotAvailableException(title);
         }
 
         copies--;
